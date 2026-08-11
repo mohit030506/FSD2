@@ -27,6 +27,8 @@ export const Dashboard: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
+  const [editingPostId, setEditingPostId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState('');
 
   const fetchDashboardData = async () => {
     try {
@@ -94,6 +96,29 @@ export const Dashboard: React.FC = () => {
       }
     } catch (err: any) {
       setErrorMsg(err.response?.data?.message || 'Unauthorized to delete posts.');
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleEditPost = async (postId: string) => {
+    if (!editTitle.trim()) return;
+
+    try {
+      setActionLoading(true);
+      setErrorMsg(null);
+      const res = await api.post('/api/data/editor/edit', { postId, title: editTitle });
+      
+      if (data) {
+        setData({
+          ...data,
+          posts: res.data.posts,
+        });
+      }
+      setEditingPostId(null);
+      setEditTitle('');
+    } catch (err: any) {
+      setErrorMsg(err.response?.data?.message || 'Unauthorized to edit posts.');
     } finally {
       setActionLoading(false);
     }
@@ -249,29 +274,74 @@ export const Dashboard: React.FC = () => {
                   padding: '12px 16px',
                 }}
               >
-                <div>
-                  <h4 style={{ fontSize: '0.95rem', fontWeight: 500 }}>{post.title}</h4>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                    Author: @{post.author} • ID: {post.id}
-                  </span>
-                </div>
-                
-                {/* Conditional Delete Button */}
-                {hasDeletePermission ? (
-                  <button
-                    onClick={() => handleDeletePost(post.id)}
-                    className="btn btn-danger"
-                    style={{ padding: '6px 12px', fontSize: '0.8rem' }}
-                    disabled={actionLoading}
-                  >
-                    Delete
-                  </button>
+                {editingPostId === post.id ? (
+                  <div style={{ display: 'flex', gap: '8px', flexGrow: 1, marginRight: '16px' }}>
+                    <input
+                      type="text"
+                      value={editTitle}
+                      onChange={(e) => setEditTitle(e.target.value)}
+                      style={{ flexGrow: 1, padding: '6px 12px', fontSize: '0.9rem' }}
+                      disabled={actionLoading}
+                      autoFocus
+                    />
+                    <button
+                      onClick={() => handleEditPost(post.id)}
+                      className="btn btn-primary"
+                      style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+                      disabled={actionLoading || !editTitle.trim()}
+                    >
+                      Save
+                    </button>
+                    <button
+                      onClick={() => { setEditingPostId(null); setEditTitle(''); }}
+                      className="btn btn-secondary"
+                      style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+                      disabled={actionLoading}
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 ) : (
-                  user?.role === 'editor' && (
-                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                      Admin delete only
-                    </span>
-                  )
+                  <>
+                    <div>
+                      <h4 style={{ fontSize: '0.95rem', fontWeight: 500 }}>{post.title}</h4>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                        Author: @{post.author} • ID: {post.id}
+                      </span>
+                    </div>
+                    
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      {/* Conditional Edit Button */}
+                      {hasWritePermission && (
+                        <button
+                          onClick={() => { setEditingPostId(post.id); setEditTitle(post.title); }}
+                          className="btn btn-secondary"
+                          style={{ padding: '6px 12px', fontSize: '0.8rem', borderColor: 'var(--color-primary)', color: 'var(--color-primary)' }}
+                          disabled={actionLoading}
+                        >
+                          Edit
+                        </button>
+                      )}
+
+                      {/* Conditional Delete Button */}
+                      {hasDeletePermission ? (
+                        <button
+                          onClick={() => handleDeletePost(post.id)}
+                          className="btn btn-danger"
+                          style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+                          disabled={actionLoading}
+                        >
+                          Delete
+                        </button>
+                      ) : (
+                        user?.role === 'editor' && (
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                            Admin delete only
+                          </span>
+                        )
+                      )}
+                    </div>
+                  </>
                 )}
               </div>
             ))}

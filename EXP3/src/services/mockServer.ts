@@ -32,10 +32,37 @@ export const devSettings = {
 };
 
 // Database Mock
-const USERS = [
-  { username: 'admin', password: 'password123', role: 'admin', fullName: 'Administrator' },
-  { username: 'editor', password: 'password123', role: 'editor', fullName: 'Content Editor' },
-  { username: 'viewer', password: 'password123', role: 'viewer', fullName: 'Guest Viewer' },
+let USERS = [
+  { username: 'admin', password: 'password123', role: 'admin', fullName: 'Administrator', email: 'admin@guardian.io', status: 'Active', department: 'Management' },
+  { username: 'editor', password: 'password123', role: 'editor', fullName: 'Content Editor', email: 'editor@guardian.io', status: 'Active', department: 'Content' },
+  { username: 'viewer', password: 'password123', role: 'viewer', fullName: 'Guest Viewer', email: 'viewer@guardian.io', status: 'Active', department: 'Support' },
+  { username: 'sarah_connor', password: 'password123', role: 'admin', fullName: 'Sarah Connor', email: 'sarah.c@guardian.io', status: 'Active', department: 'Security' },
+  { username: 'bruce_wayne', password: 'password123', role: 'admin', fullName: 'Bruce Wayne', email: 'bruce.w@waynecorp.com', status: 'Active', department: 'Management' },
+  { username: 'clark_kent', password: 'password123', role: 'editor', fullName: 'Clark Kent', email: 'clark.k@dailyplanet.com', status: 'Active', department: 'Editorial' },
+  { username: 'peter_parker', password: 'password123', role: 'editor', fullName: 'Peter Parker', email: 'peter.p@dailybugle.com', status: 'Active', department: 'Photography' },
+  { username: 'tony_stark', password: 'password123', role: 'admin', fullName: 'Tony Stark', email: 'tony.s@stark.com', status: 'Active', department: 'Engineering' },
+  { username: 'natasha_romanoff', password: 'password123', role: 'admin', fullName: 'Natasha Romanoff', email: 'natasha.r@shield.gov', status: 'Active', department: 'Operations' },
+  { username: 'steve_rogers', password: 'password123', role: 'viewer', fullName: 'Steve Rogers', email: 'steve.r@brooklyn.net', status: 'Active', department: 'Personnel' },
+  { username: 'wanda_maximoff', password: 'password123', role: 'editor', fullName: 'Wanda Maximoff', email: 'wanda.m@westview.org', status: 'Active', department: 'Content' },
+  { username: 'selina_kyle', password: 'password123', role: 'viewer', fullName: 'Selina Kyle', email: 'selina.k@cat.net', status: 'Suspended', department: 'Acquisitions' },
+  { username: 'barry_allen', password: 'password123', role: 'editor', fullName: 'Barry Allen', email: 'barry.a@ccpd.gov', status: 'Active', department: 'Forensics' },
+  { username: 'diana_prince', password: 'password123', role: 'admin', fullName: 'Diana Prince', email: 'diana.p@louvre.fr', status: 'Active', department: 'Curation' },
+  { username: 'hal_jordan', password: 'password123', role: 'viewer', fullName: 'Hal Jordan', email: 'hal.j@ferris.com', status: 'Active', department: 'Aviation' },
+  { username: 'arthur_curry', password: 'password123', role: 'viewer', fullName: 'Arthur Curry', email: 'arthur.c@atlantis.org', status: 'Active', department: 'Marine' },
+  { username: 'victor_stone', password: 'password123', role: 'editor', fullName: 'Victor Stone', email: 'victor.s@star-labs.com', status: 'Active', department: 'IT Support' },
+  { username: 'barbara_gordon', password: 'password123', role: 'admin', fullName: 'Barbara Gordon', email: 'barbara.g@gcpd.gov', status: 'Active', department: 'Database' },
+  { username: 'harleen_quinzel', password: 'password123', role: 'viewer', fullName: 'Harleen Quinzel', email: 'harleen.q@arkham.edu', status: 'Suspended', department: 'Medical' },
+  { username: 'pamela_isley', password: 'password123', role: 'editor', fullName: 'Pamela Isley', email: 'pamela.i@botany.org', status: 'Active', department: 'Research' },
+  { username: 'reed_richards', password: 'password123', role: 'admin', fullName: 'Reed Richards', email: 'reed.r@baxter.org', status: 'Active', department: 'R&D' },
+  { username: 'susan_storm', password: 'password123', role: 'editor', fullName: 'Susan Storm', email: 'susan.s@baxter.org', status: 'Active', department: 'PR' },
+  { username: 'johnny_storm', password: 'password123', role: 'viewer', fullName: 'Johnny Storm', email: 'johnny.s@baxter.org', status: 'Active', department: 'Marketing' },
+  { username: 'ben_grimm', password: 'password123', role: 'viewer', fullName: 'Ben Grimm', email: 'ben.g@baxter.org', status: 'Active', department: 'Logistics' },
+  { username: 'charles_xavier', password: 'password123', role: 'admin', fullName: 'Charles Xavier', email: 'charles.x@xavier.edu', status: 'Active', department: 'Education' },
+  { username: 'logan_howlett', password: 'password123', role: 'viewer', fullName: 'Logan Howlett', email: 'logan.h@weaponx.ca', status: 'Active', department: 'Security' },
+  { username: 'jean_grey', password: 'password123', role: 'editor', fullName: 'Jean Grey', email: 'jean.g@xavier.edu', status: 'Active', department: 'Counseling' },
+  { username: 'scott_summers', password: 'password123', role: 'editor', fullName: 'Scott Summers', email: 'scott.s@xavier.edu', status: 'Active', department: 'Operations' },
+  { username: 'ororo_munroe', password: 'password123', role: 'admin', fullName: 'Ororo Munroe', email: 'ororo.m@weather.org', status: 'Active', department: 'Atmospheric' },
+  { username: 'wade_wilson', password: 'password123', role: 'viewer', fullName: 'Wade Wilson', email: 'wade.w@chimichanga.com', status: 'Suspended', department: 'Contracting' },
 ];
 
 interface Post {
@@ -246,6 +273,27 @@ export async function mockAdapter(config: InternalAxiosRequestConfig): Promise<A
     return createSuccessResponse(config, 201, { posts, message: 'Post created successfully.' });
   }
 
+  // 4b. POST /api/data/editor/edit (Editor or Admin only)
+  if (path === '/api/data/editor/edit' && method === 'post') {
+    if (currentUser.role !== 'admin' && currentUser.role !== 'editor') {
+      logService.addLog('error', '🚫 Forbidden Access', `User ${currentUser.username} (${currentUser.role}) attempted to edit posts but lacks 'editor' privileges.`);
+      return createErrorResponse(config, 403, 'Forbidden: Editor or Admin privileges required');
+    }
+
+    const { postId, title } = requestBody || {};
+    const postIndex = posts.findIndex((p) => p.id === postId);
+    
+    if (postIndex !== -1) {
+      const oldTitle = posts[postIndex].title;
+      posts[postIndex].title = title || posts[postIndex].title;
+      logService.addLog('success', '✏️ Resource Edited', `Post "${oldTitle}" renamed to "${posts[postIndex].title}" by ${currentUser.username}.`);
+      return createSuccessResponse(config, 200, { posts, message: 'Post edited successfully.' });
+    } else {
+      logService.addLog('error', '🔍 Edit Failed', `Post ID ${postId} not found.`);
+      return createErrorResponse(config, 404, 'Post not found');
+    }
+  }
+
   // 5. DELETE /api/data/admin (Admin only)
   if (path === '/api/data/admin' && method === 'post') {
     if (currentUser.role !== 'admin') {
@@ -257,6 +305,58 @@ export async function mockAdapter(config: InternalAxiosRequestConfig): Promise<A
     posts = posts.filter((p) => p.id !== postId);
     logService.addLog('success', '🗑️ Resource Deleted', `Post ${postId} deleted by admin.`);
     return createSuccessResponse(config, 200, { posts, message: 'Post deleted successfully by administrator.' });
+  }
+
+  // 6. GET /api/data/users (Editor or Admin only)
+  if (path === '/api/data/users' && method === 'get') {
+    if (currentUser.role !== 'admin' && currentUser.role !== 'editor') {
+      logService.addLog('error', '🚫 Forbidden Access', `User ${currentUser.username} (${currentUser.role}) attempted to fetch user list but lacks 'editor' or 'admin' privileges.`);
+      return createErrorResponse(config, 403, 'Forbidden: Admin or Editor privileges required');
+    }
+    logService.addLog('success', '📥 Resource Access', `User ${currentUser.username} loaded user directory of 30 accounts.`);
+    return createSuccessResponse(config, 200, USERS.map(u => ({
+      username: u.username,
+      role: u.role,
+      fullName: u.fullName,
+      email: u.email,
+      status: u.status,
+      department: u.department
+    })));
+  }
+
+  // 7. POST /api/data/users/delete (Admin only)
+  if (path === '/api/data/users/delete' && method === 'post') {
+    if (currentUser.role !== 'admin') {
+      logService.addLog('error', '🚫 Forbidden Access', `User ${currentUser.username} (${currentUser.role}) attempted to delete a user but lacks 'admin' privileges.`);
+      return createErrorResponse(config, 403, 'Forbidden: Admin privileges required');
+    }
+    const { targetUsername } = requestBody || {};
+    
+    if (targetUsername === currentUser.username) {
+      logService.addLog('error', '⚡ Self Deletion Blocked', `Admin ${currentUser.username} attempted to delete their own active session.`);
+      return createErrorResponse(config, 400, 'Cannot delete your own active administrator account');
+    }
+
+    const index = USERS.findIndex(u => u.username === targetUsername);
+    if (index !== -1) {
+      const deletedUser = USERS[index];
+      USERS.splice(index, 1);
+      logService.addLog('success', '🗑️ User Deleted', `User account "${deletedUser.fullName}" (@${targetUsername}) was deleted by admin.`);
+      return createSuccessResponse(config, 200, {
+        message: `User ${targetUsername} deleted successfully.`,
+        users: USERS.map(u => ({
+          username: u.username,
+          role: u.role,
+          fullName: u.fullName,
+          email: u.email,
+          status: u.status,
+          department: u.department
+        }))
+      });
+    } else {
+      logService.addLog('error', '🔍 Delete Failed', `User @${targetUsername} not found.`);
+      return createErrorResponse(config, 404, 'User not found');
+    }
   }
 
   logService.addLog('error', '🔍 Route Not Found', `Requested endpoint ${path} does not exist.`);
